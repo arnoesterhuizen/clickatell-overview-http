@@ -6,11 +6,12 @@ An HTTP/S API is a base level API for small businesses that is simple to use. It
 
 # Glossary
 
-MT
-: Mobile Terminated; a message sent via Clickatell's gateway to a mobile phone
-
-MO
-: Mobile Originated; a message sent from a mobile phone to your software via Clickatell's gateway
+<dl>
+<dt>MT</dt>
+<dd>Mobile Terminated; a message sent via Clickatell's gateway to a mobile phone</dd>
+<dt>MO</dt>
+<dd>Mobile Originated; a message sent from a mobile phone to your software via Clickatell's gateway</dd>
+</dl>
 
 #Popular Calls
 
