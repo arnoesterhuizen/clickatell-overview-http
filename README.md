@@ -60,7 +60,7 @@ if ($session[0] == 'OK') {
 		echo 'Message sending failed; ' . $send[0] . ': ' . $send[1];
 	}
 } else {
-	echo 'Authentication failure: ' . $response[0];
+	echo 'Authentication failure: ' . $response;
 }
 ```
 
