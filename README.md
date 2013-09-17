@@ -28,36 +28,40 @@ C#
 ##PHP Sample Code
 ```php
 <?php
-    $user     = "user";
-    $password = "password";
-    $api_id   = "xxxxxxx";
-    $baseurl  = "http://api.clickatell.com";
+//authentication details
+$user     = urlencode('user');
+$password = urlencode('password');
+$api_id   = '3442105';
+$baseurl  = 'http://api.clickatell.com';
 
-    $text = urlencode("This is an example message");
-    $to = "00123456789";
+//message details
+$to   = '00123456789';
+$text = urlencode("This is an example message");
 
-    //authenticate and get token
-    $ret = file($baseurl/http/auth?user=$user&password=$password&api_id=$api_id);
+//authenticate and get token
+$request  = $baseurl . '/http/auth?user=' . $user . '&password=' . $password . '&api_id=' . $api_id;
+$response = file_get_contents($request);
+//explode response. return string is on first line of the data returned
+$session = explode(': ', $response);
 
-    // explode our response. return string is on first line of the data returned
-    $sess = explode(":", $ret[0]);
-    if ($sess[0] == "OK") {
-         $sess_id = trim($sess[1]); // remove any whitespace
-        $url = "$baseurl/http/sendmsg?session_id=$sess_id&to=$to&text=$text";
- 
-        // do sendmsg call
-        $ret = file($url);
-        $send = explode(":",$ret[0]);
- 
-        if ($send[0] == "ID") {
-            echo "successnmessage ID: ". $send[1];
-        } else {
-            echo "send message failed";
-        }
-    } else {
-        echo "Authentication failure: ". $ret[0];
-    }
-?>
+if ($session[0] == 'OK') {
+	//remove any whitespace
+	$session_id = trim($session[1]);
+
+	//send message
+	$request  = $baseurl . '/http/sendmsg?session_id=' . $session_id . '&to=' . $to . '&text=' . $text;
+	$response = file_get_contents($request);
+	//explode response. return string is on first line of the data returned
+	$send = explode(': ', $response);
+
+	if ($send[0] == 'ID') {
+		echo 'Message sent; Message ID: ' . $send[1];
+	} else {
+		echo 'Message sending failed; ' . $send[0] . ': ' . $send[1];
+	}
+} else {
+	echo 'Authentication failure: ' . $response[0];
+}
 ```
 
 ##Bash
