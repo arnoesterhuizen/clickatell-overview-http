@@ -13,11 +13,26 @@ An HTTP/S API is a base level API for small businesses that is simple to use. It
 <dd>Mobile Originated; a message sent from a mobile phone to your software via Clickatell's gateway</dd>
 </dl>
 
-#Popular Calls
+# Basic Call
 
-##Call 1
+* https://api.clickatell.com/http/{command}/{parameters}
 
-##Call 2
+#Commands
+
+##Authenticate
+
+* Command: `auth`
+* Required:
+    * [`api_id`](#parameters-api-id),
+    * [`user`](#parameters-user),
+    * [`password`](#parameters-password)
+* Response: 
+    * `OK: 123451`,
+    * `ERR: 203, Description`
+
+#Parameters
+
+#Responses
 
 #Sample Code
 
@@ -85,6 +100,13 @@ Also see https://github.com/arcturial/clickatell for more advanced examples and 
 ##Perl
 
 ##Python
+
+```python
+
+
+```
+
+Also see https://pypi.python.org/pypi/python-clickatell for more advanced examples and a library.
 
 ##Scala
 
