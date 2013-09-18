@@ -74,6 +74,8 @@ if ($session[0] == 'OK') {
 }
 ```
 
+Also see https://github.com/arcturial/clickatell for more advanced examples and a library.
+
 ##Bash
 
 ##Java
