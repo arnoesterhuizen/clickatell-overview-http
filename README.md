@@ -1,23 +1,20 @@
-# SMS API Summary
-An API is a set of rules that govern how two pieces of software integrate and interact. The API documentation helps the client's software connect with Clickatell's SMS gateway in order to send SMSs without having to worry about the nitty gritty details of how it's done.
+# Clickatell HTTP API Overview
 
-##HTTP/S
-An HTTP/S API is a base level API for small businesses that is simple to use. It sends a limited amount of messages per burst (maximum 50-100) and can be integrated with a broad range of other software programs. It supports all of your core SMS gateway functionality and is your entry level connection to these functions.
+You can access the API endpoint on `api.clickatell.com/http` using either http or https protocols, and use either `GET` or `POST` methods.
 
-# Glossary
+# Call Format
 
-<dl>
-<dt>MT</dt>
-<dd>Mobile Terminated; a message sent via Clickatell's gateway to a mobile phone</dd>
-<dt>MO</dt>
-<dd>Mobile Originated; a message sent from a mobile phone to your software via Clickatell's gateway</dd>
-</dl>
+The call is in the format `https://api.clickatell.com/http/<command>/<parameters>`
 
-# Basic Call
+# Commands
 
-* https://api.clickatell.com/http/{command}/{parameters}
-
-#Commands
+* `auth` -- Start a message session and receive a session ID
+* `ping` -- Prevent a session from expiring
+* `sendmsg` -- Send a message
+* `querymsg` -- Query the status of a message
+* `delmsg` -- Delete a message if it hasn't left our system
+* `getbalance` -- 
+* `getmsgcharge`
 
 ##Authenticate
 
