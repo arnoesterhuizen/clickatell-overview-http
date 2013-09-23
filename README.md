@@ -33,7 +33,7 @@ Authenticate and get a [`session_id`](#session_id) that expires after 15 minutes
 * Failure response:
     * `ERR: <error code>, <error description>`
 
-See a list of [error codes and descriptions](#error-codes).
+The session ID is a 32 character hexadecimal string. See a list of [error codes and descriptions](#error-codes).
 
 ## `ping`
 
@@ -56,14 +56,14 @@ Send one or more messages using a comma seperated list of [recipients](#to)
     * [`to`](#to)
     * [`text`](#text)
 * Success response; single recipient:
-    * `OK: <apimsgid>`
-* Success response; multiple recipients:
-    * `OK: <apimsgid> To: <recipient>`
-    * `OK: <apimsgid> To: <recipient>`
-    * `...`
-    * `OK: <apimsgid> To: <recipient>`
+    * `ID: <apimsgid>`
 * Failure response; single recipient:
     * `ERR: <error code>, <error description>`
+* Success response; multiple recipients:
+    * `ID: <apimsgid> To: <recipient>`
+    * `ID: <apimsgid> To: <recipient>`
+    * `...`
+    * `ID: <apimsgid> To: <recipient>`
 
 See a list of [error codes and descriptions](#error-codes).
 
