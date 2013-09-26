@@ -50,16 +50,19 @@ See a list of [error codes and descriptions](#error-codes).
 
 ## `sendmsg`
 
-Send one or more messages using a comma seperated list of [recipients](#to). If there is more than one recipient, the API will add a `To: <recipient>` part to the response.
+Send a message to a [recipient](#to):
 
 * Required parameters:
     * [`session_id`](#session_id)
     * [`to`](#to)
     * [`text`](#text)
-* Success response; single recipient:
+* Success response:
     * `ID: <apimsgid>`
-* Failure response; single recipient:
+* Failure response:
     * `ERR: <error code>, <error description>`
+
+You can also send a message to multiple recipients by passing a comma-seperated list of destination numbers.
+
 * Success response; multiple recipients:
     * `ID: <apimsgid> To: <recipient>`
     * `ID: <apimsgid> To: <recipient>`
