@@ -65,11 +65,9 @@ You can also send a message to multiple recipients by passing a comma-seperated 
 
 * Success response; multiple recipients:
     * `ID: <apimsgid> To: <recipient>`
-    * `ID: <apimsgid> To: <recipient>`
     * ...
     * `ID: <apimsgid> To: <recipient>`
 * Failure response; multiple recipients:
-    * `ERR: <error code>, <error description> To: <recipient>`
     * `ERR: <error code>, <error description> To: <recipient>`
     * ...
     * `ERR: <error code>, <error description> To: <recipient>`
@@ -77,7 +75,6 @@ You can also send a message to multiple recipients by passing a comma-seperated 
     * `ID: <apimsgid> To: <recipient>`
     * `ERR: <error code>, <error description> To: <recipient>`
     * ...
-    * `ID: <apimsgid> To: <recipient>`
 
 See a list of [error codes and descriptions](#error-codes).
 
