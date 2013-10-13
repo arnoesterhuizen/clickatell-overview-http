@@ -10,23 +10,23 @@ Remember to URL encode your parameter values.
 
 The call is in the format `https://api.clickatell.com/http/<command>?<parameters>`
 
-See a list of [commands](#commands) and [parameters](#parameters).
+See a list of [commands](#commonly-used-commands) and [parameters](#parameters).
 
-# Commands
+# Commonly Used Commands
 
 The most frequently used commands are:
 * [`auth`](#auth) &ndash; Authenticate before you start sending messages
 * [`sendmsg`](#sendmsg) &ndash; Send a message
 * [`token_pay`](#token_pay) &ndash; Redeem a voucher for credits
 
-Other commands include:
+Other commonly used commands include:
 * [`querymsg`](#querymsg) &ndash; Query the status of a message
 * [`getmsgcharge`](#getmsgcharge) &ndash; Get the charge and status of a message that was sent
 * [`ping`](#ping) &ndash; Prevent a session from expiring by extending it another 15 minutes
 * [`delmsg`](#delmsg) &ndash; Delete a message if it hasn't left our system
 * [`getbalance`](#getbalance) &ndash; Get the balance of the specified account
 
-Below is an alpahbetical listing of the more common commands and a summary, but for the full list of commands, refer to [Clickatell's HTTP API documentation](http://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf).
+Below is an alpahbetical listing of the more commonly used commands with a description. To see the full list of commands, refer to [Clickatell's HTTP API documentation](http://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf).
 
 ## `auth`
 
