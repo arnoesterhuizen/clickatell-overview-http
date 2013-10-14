@@ -45,7 +45,7 @@ The [`session_id`](#session_id) is a 32 character hexadecimal string. See a list
 
 ## `delmsg`
 
-Prevent a message that hasn't left our queues from being sent using the [`apimsgid`](#apimsgid) parameter (returned from the [`sendmsg`](#sendmsg) command). Because we process messages as they come in, this command is only really useful for messages with a [deferred delivery time](#deliv_time) or a [scheduled delivery time in the future](#scheduled_time).
+Prevent a message that hasn't left our queues from being sent using the [`apimsgid`](#apimsgid) parameter (returned from the [`sendmsg`](#sendmsg) command). Because we process messages immediately, this command is only useful for messages with a [deferred delivery time](#deliv_time) or a [scheduled delivery time in the future](#scheduled_time).
 
 * Required parameters:
     * [`session_id`](#session_id)
@@ -55,7 +55,7 @@ Prevent a message that hasn't left our queues from being sent using the [`apimsg
 * Failure response:
     * `ERR: <error code>, <error description>`
 
-See a list of [error codes and descriptions](#error-codes).
+See a list of [status codes](#status-codes) and [error codes and descriptions](#error-codes).
 
 ## `getbalance`
 
@@ -64,7 +64,7 @@ This will return the number of credits available to the account (as a floating p
 * Required parameters:
     * [`session_id`](#session_id)
 * Success response:
-    * `Credit: 0.0`
+    * `Credit: <0.0>`
 * Failure response:
     * `ERR: <error code>, <error description>`
 
@@ -72,9 +72,7 @@ See a list of [error codes and descriptions](#error-codes).
 
 ## `getmsgcharge`
 
-Similar to [`querymsg`](#querymsg), this is a _fallback_ method to query how many credits were used to send a message using the [`apimsgid`](#apimsgid) parameter (returned from the [`sendmsg`](#sendmsg) command). This method also returns the message status.
-
-The preferred way to get this information is to use the [callback URL](#callback-url) parameter.
+This is a fallback method to query how many credits were used to send a message. The preferred way to get this information is to use the [callback](#callback) parameter. This method also returns the message status.
 
 * Required parameters:
     * [`session_id`](#session_id)
@@ -84,13 +82,11 @@ The preferred way to get this information is to use the [callback URL](#callback
 * Failure response:
     * `ERR: <error code>, <error description>`
 
-See a list of [status codes](#status-codes) and [error codes and descriptions](#error-codes).
+See a list of [status codes](#status-codes) and [error codes and descriptions](#error-codes). See also [`querymsg`](#querymsg).
 
 ## `querymsg`
 
-This is a _fallback_ method to query the status of a message using the [`apimsgid`](#apimsgid) parameter (returned from the [`sendmsg`](#sendmsg) command).
-
-The preferred way to get this information is to use the [callback URL](#callback-url) parameter.
+This is a fallback method to query the status of a message. The preferred way to get this information is to use the [callback](#callback) parameter.
 
 * Required parameters:
     * [`session_id`](#session_id)
@@ -100,11 +96,11 @@ The preferred way to get this information is to use the [callback URL](#callback
 * Failure response:
     * `ERR: <error code>, <error description>`
 
-See a list of [status codes](#status-codes) and [error codes and descriptions](#error-codes).
+See a list of [status codes](#status-codes) and [error codes and descriptions](#error-codes). See also [`getmsgcharge`](#getmsgcharge).
 
 ## `ping`
 
-Ping the service to extend your [`session_id`](#session_id) lifetime with another 15 minutes.
+Ping the service to extend your session lifetime with another 15 minutes.
 
 * Required parameters:
     * [`session_id`](#session_id)
@@ -117,7 +113,7 @@ See a list of [error codes and descriptions](#error-codes).
 
 ## `sendmsg`
 
-Send a message to a [recipient](#to):
+Send a message to a recipient:
 
 * Required parameters:
     * [`session_id`](#session_id)
