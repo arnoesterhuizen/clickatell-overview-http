@@ -154,7 +154,7 @@ Use this command to redeem a voucher for message credits.
 
 See a list of [error codes and descriptions](#error-codes).
 
-#Parameters
+# Parameters
 These (and more) parameters are documented in more detail in [Clickatell's HTTP API documentation](http://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf).
 
 ## `api_id`
@@ -167,7 +167,35 @@ A unique ID we return that can be used to refer to a message submitted to our se
 
 ## `callback`
 
-Instead of polling our servers for the message status, you can specify a callback URL that we can use to notify you of status updates to the message. We will pass [`apimsgid`](#apimsgid), [`charge`](#charge), [`climsgid`](#climsgid), [`from`](#from), [`status`](#status), [`timestamp`](#timestamp) and [`to`](#to). If we're unable to access the URL, our servers will retry up to 8 times.
+Specify which message statuses to inform you of. You need to set a callback URL in the API settings in Clickatell Developer's Central.
+
+We will pass [`apimsgid`](#apimsgid), [`charge`](#charge), [`climsgid`](#climsgid), [`from`](#from), [`status`](#status), [`timestamp`](#timestamp) and [`to`](#to). If we're unable to access the URL, our servers will retry up to 8 times.
+
+Possible values for the `callback` parameter are:
+
+| Callback Value  | Status Codes that will trigger a callback (See [`status`](#status)) | Detail |
+|-----------------|---------------------------------------------------------------------|---|
+|0                |                                  |No callback triggered                 |
+|1                |003                               |Intermediate statuses                 |
+|2                |004, 005, 007, 009, 010, 012      |Final statuses                        |
+|3                |003, 004, 005, 006, 009, 010, 012 |Intermediate and final statuses       |
+|4                |005, 007, 009, 010, 012           |Error statuses                        |
+|5                |003, 005, 007, 009, 010, 012      |Intermediate and error statuses       |
+|6                |004, 005, 007, 009, 010, 012      |Final and error statuses              |
+|7                |003, 004, 005, 006, 009, 010, 012 |Intermediate, final and error statuses|
+
+Currently all error statuses are also final statuses, but in the future we may return error statuses that are not final.
+
+The retry cycle:
+
+1. 2 minutes after first attempt
+1. 4 minutes after previous attempt
+1. 8 minutes after previous attempt
+1. 16 minutes after previous attempt
+1. 32 minutes after previous attempt
+1. 64 minutes after previous attempt
+1. 128 minutes after previous attempt
+1. 3 days after previous attempt
 
 ## `charge`
 
@@ -183,11 +211,13 @@ Messages that are longer than 160 charaters (or 140 bytes) can be sent in multip
 
 ## `deliv_time`
 
-Specify the number of minutes to delay the message delivery. The minimum value for this is 5 minutes, and the maximum is 10080 minutes (or 7 days).
+The number of minutes to delay the message delivery. The maximum is 10080 minutes (or 7 days). Please note that the message can be sent out up to 5 minutes later than specified.
 
 ## `from`
 
-Specify a source address (also known as a sender ID) to display on the recipient's handset. This is mostly used when you need recipients to be able to reply to your message, and must first be configured in your Clickatell Developers' Central account. Setting the `from` parameter isn't guaranteed to work with all mobile networks or handsets. Refer to the [`mo`](#mo) parameter for more information.
+The source address (also known as a sender ID) to display on the recipient's handset. This is mostly used when you need recipients to be able to reply to your message, and must first be configured in your Clickatell Developers' Central account. Setting the `from` parameter isn't guaranteed to work with all mobile networks or handsets. Refer to the [`mo`](#mo) parameter for more information.
+
+Similar to the [`to`](#to) parameter, this needs to be in standard international format (e.g. including the coutry code, and using only digits &ndash; without any spaces or "+").
 
 ## `mo`
 
@@ -197,18 +227,44 @@ To make sure that the `from` parameter works as expected, set this parameter to 
 
 This is the password you used when signing up for your Clickatell Developers' Central account.
 
-## `req_feat`
-
-
-
 ## `scheduled_time`
+
+The unix timestamp of when we should deliver the message. You can schedule up to 7 days in advance. Please note that the message can be sent out up to 5 minutes later than specified.
+
 ## `session_id`
+
+The unique session ID we send after you authenticate. This is valid for 15 minutes after the last API call, but you can keep the session alive by using the [`ping`](#ping) command.
+
 ## `status`
+
+The message status code. Refer to the list of [status codes](#status-codes).
+
 ## `text`
+
+The body of the message you would like to send. If the text is more than 160 characters, use the [`concat`](#concat) parameter to make them concatenate on supported handsets. 
+
+For messages with special characters you will need to encode it using http://rishida.net/tools/conversion/, and set the [`unicode`](#unicode) parameter to 1.
+
 ## `timestamp`
+
+The unix timestamp we return with every message status update to indicate when the status change was triggered.
+
 ## `to`
+
+The recipient address in standard international format (e.g. including the coutry code, and using only digits &ndash; without any spaces or "+")
+
 ## `token`
+
+The credit voucher token you would like to redeem. this will add credits to your account.
+
+## `unicode`
+
+Specify this parameter with a value of 1 if you have special characters in your message. See the description of the [`text`](#text) parameter.
 
 ## `user`
 
 This is the username you used when signing up for your Clickatell Developers' Central account.
+
+# Error Codes
+
+# Message Statuses
