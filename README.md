@@ -1,6 +1,6 @@
 # Clickatell HTTP API Overview
 
-The full Clickatell HTTP API documentation can be found at http://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf.
+The full Clickatell HTTP API documentation can be found at https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf.
 
 You can access the API endpoint on `api.clickatell.com/http` using either `http` or `https` protocols, and use either `GET` or `POST` methods. Samples in this document use `GET` for easier reading, but Clickatell recommends using `POST` in production environments.
 
@@ -26,7 +26,7 @@ Other commonly used commands include:
 * [`delmsg`](#delmsg) &ndash; Delete a message if it hasn't left our system
 * [`getbalance`](#getbalance) &ndash; Get the balance of the specified account
 
-Below is an alpahbetical listing of the more commonly used commands with a description. To see the full list of commands, refer to [Clickatell's HTTP API documentation](http://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf).
+Below is an alpahbetical listing of the more commonly used commands with a description. To see the full list of commands, refer to [Clickatell's HTTP API documentation](https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf).
 
 ## `auth`
 
@@ -72,7 +72,7 @@ See a list of [error codes and descriptions](#error-codes).
 
 ## `getmsgcharge`
 
-This is a fallback method to query how many credits were used to send a message. The preferred way to get this information is to use the [callback](#callback) parameter. This method also returns the message status.
+This is a fallback method to query how many credits were used to send a message. The preferred way to get this information is to use the [`callback`](#callback) parameter. This method also returns the message status.
 
 * Required parameters:
     * [`session_id`](#session_id)
@@ -86,7 +86,7 @@ See a list of [status codes](#status) and [error codes and descriptions](#error-
 
 ## `querymsg`
 
-This is a fallback method to query the status of a message. The preferred way to get this information is to use the [callback](#callback) parameter.
+This is a fallback method to query the status of a message. The preferred way to get this information is to use the [`callback`](#callback) parameter.
 
 * Required parameters:
     * [`session_id`](#session_id)
@@ -151,7 +151,7 @@ Use this command to redeem a voucher for message credits.
 See a list of [error codes and descriptions](#error-codes).
 
 # Parameters
-These (and more) parameters are documented in more detail in [Clickatell's HTTP API documentation](http://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf).
+These (and more) parameters are documented in more detail in [Clickatell's HTTP API documentation](https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf).
 
 ## `api_id`
 
@@ -195,7 +195,7 @@ The retry cycle:
 
 ## `charge`
 
-The amount of credits was used to deliver the message.
+The amount of credits that was used to deliver the message.
 
 ## `climsgid`
 
@@ -217,7 +217,7 @@ Similar to the [`to`](#to) parameter, this needs to be in standard international
 
 ## `mo`
 
-To make sure that the `from` parameter works as expected, set this parameter to 1 and we will only use mobile networks that allow a source address to be specified. This is only applicable if you you need recipients to be able to reply to your messages, and might mean we have to use more expensive delivery methods.
+To make sure that the [`from`](#from) parameter works as expected, set this parameter to 1 and we will only use mobile networks that allow a source address to be specified. This is only applicable if you you need recipients to be able to reply to your messages, and might mean we have to use more expensive delivery methods.
 
 ## `password`
 
