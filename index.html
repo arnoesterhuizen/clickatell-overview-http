@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Clickatell HTTP API Overview : Introduction to Clickatell's HTTP API" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Clickatell HTTP API Overview</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/arnoesterhuizen/clickatell-overview-http">View on GitHub</a>
+
+          <h1 id="project_title">Clickatell HTTP API Overview</h1>
+          <h2 id="project_tagline">Introduction to Clickatell's HTTP API</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/arnoesterhuizen/clickatell-overview-http/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/arnoesterhuizen/clickatell-overview-http/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="clickatell-http-api-overview" class="anchor" href="#clickatell-http-api-overview"><span class="octicon octicon-link"></span></a>Clickatell HTTP API Overview</h1>
+
+<p>The full Clickatell HTTP API documentation can be found at <a href="https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf">https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf</a>.</p>
+
+<p>You can access the API endpoint on <code>api.clickatell.com/http</code> using either <code>http</code> or <code>https</code> protocols, and use either <code>GET</code> or <code>POST</code> methods. Samples in this document use <code>GET</code> for easier reading, but Clickatell recommends using <code>POST</code> in production environments.</p>
+
+<p>Remember to URL encode your parameter values.</p>
+
+<h1>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h1>
+
+<p>The call is in the format <code>https://api.clickatell.com/http/&lt;command&gt;?&lt;parameters&gt;</code></p>
+
+<p>See a list of <a href="#commonly-used-commands">commands</a> and <a href="#parameters">parameters</a>.</p>
+
+<h1>
+<a name="commonly-used-commands" class="anchor" href="#commonly-used-commands"><span class="octicon octicon-link"></span></a>Commonly Used Commands</h1>
+
+<p>The most frequently used commands are:</p>
+
+<ul>
+<li>
+<a href="#auth"><code>auth</code></a> – Authenticate before you start sending messages</li>
+<li>
+<a href="#sendmsg"><code>sendmsg</code></a> – Send a message</li>
+<li>
+<a href="#token_pay"><code>token_pay</code></a> – Redeem a voucher for credits</li>
+</ul><p>Other commonly used commands include:</p>
+
+<ul>
+<li>
+<a href="#querymsg"><code>querymsg</code></a> – Query the status of a message</li>
+<li>
+<a href="#getmsgcharge"><code>getmsgcharge</code></a> – Get the charge and status of a message that was sent</li>
+<li>
+<a href="#ping"><code>ping</code></a> – Prevent a session from expiring by extending it another 15 minutes</li>
+<li>
+<a href="#delmsg"><code>delmsg</code></a> – Delete a message if it hasn't left our system</li>
+<li>
+<a href="#getbalance"><code>getbalance</code></a> – Get the balance of the specified account</li>
+</ul><p>Below is an alpahbetical listing of the more commonly used commands with a description. To see the full list of commands, refer to <a href="https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf">Clickatell's HTTP API documentation</a>.</p>
+
+<h2>
+<a name="auth" class="anchor" href="#auth"><span class="octicon octicon-link"></span></a><code>auth</code>
+</h2>
+
+<p>Authenticate and get a <a href="#session_id"><code>session_id</code></a> that expires after 15 minutes of inactivity.</p>
+
+<ul>
+<li>Required parameters:
+
+<ul>
+<li><a href="#api_id"><code>api_id</code></a></li>
+<li><a href="#user"><code>user</code></a></li>
+<li><a href="#password"><code>password</code></a></li>
+</ul>
+</li>
+<li>Success response:
+
+<ul>
+<li><code>OK: &lt;session_id&gt;</code></li>
+</ul>
+</li>
+<li>Failure response:
+
+<ul>
+<li><code>ERR: &lt;error code&gt;, &lt;error description&gt;</code></li>
+</ul>
+</li>
+</ul><p>The <a href="#session_id"><code>session_id</code></a> is a 32 character hexadecimal string. See a list of <a href="#error-codes">error codes and descriptions</a>.</p>
+
+<h2>
+<a name="delmsg" class="anchor" href="#delmsg"><span class="octicon octicon-link"></span></a><code>delmsg</code>
+</h2>
+
+<p>Prevent a message that hasn't left Clickatell's message queues from being sent. Because Clicaktell processes messages immediately, this command is only useful for messages with a <a href="#deliv_time">deferred delivery time</a> or a <a href="#scheduled_time">scheduled delivery time in the future</a>.</p>
+
+<ul>
+<li>Required parameters:
+
+<ul>
+<li><a href="#session_id"><code>session_id</code></a></li>
+<li><a href="#apimsgid"><code>apimsgid</code></a></li>
+</ul>
+</li>
+<li>Success response:
+
+<ul>
+<li><code>ID: &lt;apimsgid&gt; Status: &lt;status code&gt;</code></li>
+</ul>
+</li>
+<li>Failure response:
+
+<ul>
+<li><code>ERR: &lt;error code&gt;, &lt;error description&gt;</code></li>
+</ul>
+</li>
+</ul><p>See a list of <a href="#status">status codes</a> and <a href="#error-codes">error codes and descriptions</a>.</p>
+
+<h2>
+<a name="getbalance" class="anchor" href="#getbalance"><span class="octicon octicon-link"></span></a><code>getbalance</code>
+</h2>
+
+<p>This will return the number of credits available to the account (as a floating point value).</p>
+
+<ul>
+<li>Required parameters:
+
+<ul>
+<li><a href="#session_id"><code>session_id</code></a></li>
+</ul>
+</li>
+<li>Success response:
+
+<ul>
+<li><code>Credit: &lt;0.0&gt;</code></li>
+</ul>
+</li>
+<li>Failure response:
+
+<ul>
+<li><code>ERR: &lt;error code&gt;, &lt;error description&gt;</code></li>
+</ul>
+</li>
+</ul><p>See a list of <a href="#error-codes">error codes and descriptions</a>.</p>
+
+<h2>
+<a name="getmsgcharge" class="anchor" href="#getmsgcharge"><span class="octicon octicon-link"></span></a><code>getmsgcharge</code>
+</h2>
+
+<p>This is a fallback method to query how many credits were used to send a message. The preferred way to get this information is to use the <a href="#callback"><code>callback</code></a> parameter. This method also returns the message status.</p>
+
+<ul>
+<li>Required parameters:
+
+<ul>
+<li><a href="#session_id"><code>session_id</code></a></li>
+<li><a href="#apimsgid"><code>apimsgid</code></a></li>
+</ul>
+</li>
+<li>Success response:
+
+<ul>
+<li><code>ID: &lt;apimsgid&gt; Charge: &lt;0.0&gt; Status: &lt;status code&gt;</code></li>
+</ul>
+</li>
+<li>Failure response:
+
+<ul>
+<li><code>ERR: &lt;error code&gt;, &lt;error description&gt;</code></li>
+</ul>
+</li>
+</ul><p>See a list of <a href="#status">status codes</a> and <a href="#error-codes">error codes and descriptions</a>. See also <a href="#querymsg"><code>querymsg</code></a>.</p>
+
+<h2>
+<a name="querymsg" class="anchor" href="#querymsg"><span class="octicon octicon-link"></span></a><code>querymsg</code>
+</h2>
+
+<p>This is a fallback method to query the status of a message. The preferred way to get this information is to use the <a href="#callback"><code>callback</code></a> parameter.</p>
+
+<ul>
+<li>Required parameters:
+
+<ul>
+<li><a href="#session_id"><code>session_id</code></a></li>
+<li><a href="#apimsgid"><code>apimsgid</code></a></li>
+</ul>
+</li>
+<li>Success response:
+
+<ul>
+<li><code>ID: &lt;apimsgid&gt; Status: &lt;status code&gt;</code></li>
+</ul>
+</li>
+<li>Failure response:
+
+<ul>
+<li><code>ERR: &lt;error code&gt;, &lt;error description&gt;</code></li>
+</ul>
+</li>
+</ul><p>See a list of <a href="#status">status codes</a> and <a href="#error-codes">error codes and descriptions</a>. See also <a href="#getmsgcharge"><code>getmsgcharge</code></a>.</p>
+
+<h2>
+<a name="ping" class="anchor" href="#ping"><span class="octicon octicon-link"></span></a><code>ping</code>
+</h2>
+
+<p>Ping the service to extend your session lifetime with another 15 minutes.</p>
+
+<ul>
+<li>Required parameters:
+
+<ul>
+<li><a href="#session_id"><code>session_id</code></a></li>
+</ul>
+</li>
+<li>Success response:
+
+<ul>
+<li><code>OK:</code></li>
+</ul>
+</li>
+<li>Failure response:
+
+<ul>
+<li><code>ERR: &lt;error code&gt;, &lt;error description&gt;</code></li>
+</ul>
+</li>
+</ul><p>See a list of <a href="#error-codes">error codes and descriptions</a>.</p>
+
+<h2>
+<a name="sendmsg" class="anchor" href="#sendmsg"><span class="octicon octicon-link"></span></a><code>sendmsg</code>
+</h2>
+
+<p>Send a message to a recipient.</p>
+
+<ul>
+<li>Required parameters:
+
+<ul>
+<li><a href="#session_id"><code>session_id</code></a></li>
+<li><a href="#to"><code>to</code></a></li>
+<li><a href="#text"><code>text</code></a></li>
+</ul>
+</li>
+<li>Success response:
+
+<ul>
+<li><code>ID: &lt;apimsgid&gt;</code></li>
+</ul>
+</li>
+<li>Failure response:
+
+<ul>
+<li><code>ERR: &lt;error code&gt;, &lt;error description&gt;</code></li>
+</ul>
+</li>
+</ul><p>You can also send a message to multiple recipients by passing a comma-seperated list of destination numbers.</p>
+
+<ul>
+<li>Success response; multiple recipients:
+
+<ul>
+<li><code>ID: &lt;apimsgid&gt; To: &lt;recipient&gt;</code></li>
+</ul>
+</li>
+<li>Failure response; multiple recipients:
+
+<ul>
+<li><code>ERR: &lt;error code&gt;, &lt;error description&gt; To: &lt;recipient&gt;</code></li>
+</ul>
+</li>
+<li>Mixed response; multiple recipients:
+
+<ul>
+<li><code>ID: &lt;apimsgid&gt; To: &lt;recipient&gt;</code></li>
+<li><code>ERR: &lt;error code&gt;, &lt;error description&gt; To: &lt;recipient&gt;</code></li>
+</ul>
+</li>
+</ul><p>See a list of <a href="#error-codes">error codes and descriptions</a>.</p>
+
+<h2>
+<a name="token_pay" class="anchor" href="#token_pay"><span class="octicon octicon-link"></span></a><code>token_pay</code>
+</h2>
+
+<p>Use this command to redeem a voucher for message credits.</p>
+
+<ul>
+<li>Required parameters:
+
+<ul>
+<li><a href="#session_id"><code>session_id</code></a></li>
+<li><a href="#token"><code>token</code></a></li>
+</ul>
+</li>
+<li>Success response:
+
+<ul>
+<li><code>OK: 605</code></li>
+</ul>
+</li>
+<li>Failure response:
+
+<ul>
+<li><code>ERR: &lt;error code&gt;, &lt;error description&gt;</code></li>
+</ul>
+</li>
+</ul><p>See a list of <a href="#error-codes">error codes and descriptions</a>.</p>
+
+<h1>
+<a name="parameters" class="anchor" href="#parameters"><span class="octicon octicon-link"></span></a>Parameters</h1>
+
+<p>These (and more) parameters are documented in more detail in <a href="https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf">Clickatell's HTTP API documentation</a>.</p>
+
+<h2>
+<a name="api_id" class="anchor" href="#api_id"><span class="octicon octicon-link"></span></a><code>api_id</code>
+</h2>
+
+<p>You can sign up for multiple APIs in your Clickatell Developers' Central account, and you specify which one you would like to use using the <code>api_id</code>.</p>
+
+<h2>
+<a name="apimsgid" class="anchor" href="#apimsgid"><span class="octicon octicon-link"></span></a><code>apimsgid</code>
+</h2>
+
+<p>A unique ID we return that can be used to refer to a message submitted to our servers. The <code>apimsgid</code> is a 32 character hexadecimal string.</p>
+
+<h2>
+<a name="callback" class="anchor" href="#callback"><span class="octicon octicon-link"></span></a><code>callback</code>
+</h2>
+
+<p>Specify which message statuses to inform you of. You need to set a callback URL in the API settings in Clickatell Developer's Central.</p>
+
+<p>We will pass <a href="#apimsgid"><code>apimsgid</code></a>, <a href="#charge"><code>charge</code></a>, <a href="#climsgid"><code>climsgid</code></a>, <a href="#from"><code>from</code></a>, <a href="#status"><code>status</code></a>, <a href="#timestamp"><code>timestamp</code></a> and <a href="#to"><code>to</code></a>. If we're unable to access the URL, our servers will retry up to 8 times.</p>
+
+<p>Possible values for the <code>callback</code> parameter are:</p>
+
+<table>
+<thead><tr>
+<th>Callback Value</th>
+<th>Status Codes that will trigger a callback (See <a href="#status"><code>status</code></a>)</th>
+<th>Detail</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>0</td>
+<td></td>
+<td>No callback triggered</td>
+</tr>
+<tr>
+<td>1</td>
+<td>003</td>
+<td>Intermediate statuses</td>
+</tr>
+<tr>
+<td>2</td>
+<td>004, 005, 007, 009, 010, 012</td>
+<td>Final statuses</td>
+</tr>
+<tr>
+<td>3</td>
+<td>003, 004, 005, 006, 009, 010, 012</td>
+<td>Intermediate and final statuses</td>
+</tr>
+<tr>
+<td>4</td>
+<td>005, 007, 009, 010, 012</td>
+<td>Error statuses</td>
+</tr>
+<tr>
+<td>5</td>
+<td>003, 005, 007, 009, 010, 012</td>
+<td>Intermediate and error statuses</td>
+</tr>
+<tr>
+<td>6</td>
+<td>004, 005, 007, 009, 010, 012</td>
+<td>Final and error statuses</td>
+</tr>
+<tr>
+<td>7</td>
+<td>003, 004, 005, 006, 009, 010, 012</td>
+<td>Intermediate, final and error statuses</td>
+</tr>
+</tbody>
+</table><p>Currently all error statuses are also final statuses, but in the future we may return error statuses that are not final.</p>
+
+<p>The retry cycle:</p>
+
+<ol>
+<li>2 minutes after first attempt</li>
+<li>4 minutes after previous attempt</li>
+<li>8 minutes after previous attempt</li>
+<li>16 minutes after previous attempt</li>
+<li>32 minutes after previous attempt</li>
+<li>64 minutes after previous attempt</li>
+<li>128 minutes after previous attempt</li>
+<li>3 days after previous attempt</li>
+</ol><h2>
+<a name="charge" class="anchor" href="#charge"><span class="octicon octicon-link"></span></a><code>charge</code>
+</h2>
+
+<p>The amount of credits that was used to deliver the message.</p>
+
+<h2>
+<a name="climsgid" class="anchor" href="#climsgid"><span class="octicon octicon-link"></span></a><code>climsgid</code>
+</h2>
+
+<p>An optional unique ID you can use when sending a message. We will then return in addition to the <a href="#apimsgid"><code>apimsgid</code></a>. Use alphanumeric characters of maximum of 32 characters in length.</p>
+
+<h2>
+<a name="concat" class="anchor" href="#concat"><span class="octicon octicon-link"></span></a><code>concat</code>
+</h2>
+
+<p>Messages that are longer than 160 charaters (or 140 bytes) can be sent in multiple parts and concatenated by the receiving handset. This parameter allows you to specify the maximum number of parts to split the message into (up to a maximum of 3).</p>
+
+<h2>
+<a name="deliv_time" class="anchor" href="#deliv_time"><span class="octicon octicon-link"></span></a><code>deliv_time</code>
+</h2>
+
+<p>The number of minutes to delay the message delivery. The maximum is 10080 minutes (or 7 days). Please note that the message can be sent out up to 5 minutes later than specified.</p>
+
+<h2>
+<a name="from" class="anchor" href="#from"><span class="octicon octicon-link"></span></a><code>from</code>
+</h2>
+
+<p>The source address (also known as a sender ID) to display on the recipient's handset. This is mostly used when you need recipients to be able to reply to your message, and must first be configured in your Clickatell Developers' Central account. Setting the <code>from</code> parameter isn't guaranteed to work with all mobile networks or handsets. Refer to the <a href="#mo"><code>mo</code></a> parameter for more information.</p>
+
+<p>Similar to the <a href="#to"><code>to</code></a> parameter, this needs to be in standard international format (e.g. including the coutry code, and using only digits – without any spaces or "+").</p>
+
+<h2>
+<a name="mo" class="anchor" href="#mo"><span class="octicon octicon-link"></span></a><code>mo</code>
+</h2>
+
+<p>To make sure that the <a href="#from"><code>from</code></a> parameter works as expected, set this parameter to 1 and we will only use mobile networks that allow a source address to be specified. This is only applicable if you you need recipients to be able to reply to your messages, and might mean we have to use more expensive delivery methods.</p>
+
+<h2>
+<a name="password" class="anchor" href="#password"><span class="octicon octicon-link"></span></a><code>password</code>
+</h2>
+
+<p>This is the password you used when signing up for your Clickatell Developers' Central account.</p>
+
+<h2>
+<a name="scheduled_time" class="anchor" href="#scheduled_time"><span class="octicon octicon-link"></span></a><code>scheduled_time</code>
+</h2>
+
+<p>The unix timestamp of when we should deliver the message. You can schedule up to 7 days in advance. Please note that the message can be sent out up to 5 minutes later than specified.</p>
+
+<h2>
+<a name="session_id" class="anchor" href="#session_id"><span class="octicon octicon-link"></span></a><code>session_id</code>
+</h2>
+
+<p>The unique session ID we send after you authenticate. This is valid for 15 minutes after the last API call, but you can keep the session alive by using the <a href="#ping"><code>ping</code></a> command.</p>
+
+<h2>
+<a name="status" class="anchor" href="#status"><span class="octicon octicon-link"></span></a><code>status</code>
+</h2>
+
+<p>As messages get processed, we update the message status. Message statuses are:</p>
+
+<table>
+<thead><tr>
+<th>Status Code</th>
+<th>Status Description</th>
+<th>Comment</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>001</td>
+<td>Message unknown</td>
+<td>The message ID is incorrect or reporting is delayed.</td>
+</tr>
+<tr>
+<td>002</td>
+<td>Message queued</td>
+<td>The message could not be delivered and has been queued for attempted redelivery.</td>
+</tr>
+<tr>
+<td>003</td>
+<td>Delivered to gateway</td>
+<td>Delivered to the upstream gateway or network (delivered to the recipient).</td>
+</tr>
+<tr>
+<td>004</td>
+<td>Received by recipient</td>
+<td>Confirmation of receipt on the handset of the recipient.</td>
+</tr>
+<tr>
+<td>005</td>
+<td>Error with message</td>
+<td>There was an error with the message, probably caused by the content of the message itself.</td>
+</tr>
+<tr>
+<td>006</td>
+<td>User cancelled message delivery</td>
+<td>The message was terminated by a user (stop message command) or by our staff.</td>
+</tr>
+<tr>
+<td>007</td>
+<td>Error delivering message</td>
+<td>An error occurred delivering the message to the handset.</td>
+</tr>
+<tr>
+<td>008</td>
+<td>OK</td>
+<td>Message received by gateway.</td>
+</tr>
+<tr>
+<td>009</td>
+<td>Routing error</td>
+<td>An error occurred while attempting to route the message.</td>
+</tr>
+<tr>
+<td>010</td>
+<td>Message expired</td>
+<td>Message has expired before we were able to deliver it to the upstream gateway. No charge applies.</td>
+</tr>
+<tr>
+<td>011</td>
+<td>Message queued for later delivery</td>
+<td>Message has been queued at the gateway for delivery at a later time (delayed delivery).</td>
+</tr>
+<tr>
+<td>012</td>
+<td>Out of credit</td>
+<td>The message cannot be delivered due to a lack of funds in your account. Please re-purchase credits.</td>
+</tr>
+<tr>
+<td>014</td>
+<td>Maximum MT limit exceeded</td>
+<td>The allowable amount for MT messaging has been exceeded.</td>
+</tr>
+</tbody>
+</table><h2>
+<a name="text" class="anchor" href="#text"><span class="octicon octicon-link"></span></a><code>text</code>
+</h2>
+
+<p>The body of the message you would like to send. If the text is more than 160 characters, use the <a href="#concat"><code>concat</code></a> parameter to make them concatenate on supported handsets. </p>
+
+<p>For messages with special characters you will need to encode it using <a href="http://rishida.net/tools/conversion/">http://rishida.net/tools/conversion/</a>, and set the <a href="#unicode"><code>unicode</code></a> parameter to 1.</p>
+
+<h2>
+<a name="timestamp" class="anchor" href="#timestamp"><span class="octicon octicon-link"></span></a><code>timestamp</code>
+</h2>
+
+<p>The unix timestamp we return with every message status update to indicate when the status change was triggered.</p>
+
+<h2>
+<a name="to" class="anchor" href="#to"><span class="octicon octicon-link"></span></a><code>to</code>
+</h2>
+
+<p>The recipient address in standard international format (e.g. including the coutry code, and using only digits – without any spaces or "+")</p>
+
+<h2>
+<a name="token" class="anchor" href="#token"><span class="octicon octicon-link"></span></a><code>token</code>
+</h2>
+
+<p>The credit voucher token you would like to redeem. this will add credits to your account.</p>
+
+<h2>
+<a name="unicode" class="anchor" href="#unicode"><span class="octicon octicon-link"></span></a><code>unicode</code>
+</h2>
+
+<p>Specify this parameter with a value of 1 if you have special characters in your message. See the description of the <a href="#text"><code>text</code></a> parameter.</p>
+
+<h2>
+<a name="user" class="anchor" href="#user"><span class="octicon octicon-link"></span></a><code>user</code>
+</h2>
+
+<p>This is the username you used when signing up for your Clickatell Developers' Central account.</p>
+
+<h1>
+<a name="error-codes" class="anchor" href="#error-codes"><span class="octicon octicon-link"></span></a>Error Codes</h1>
+
+<table>
+<thead><tr>
+<th>Error Code</th>
+<th>Error Description</th>
+<th>Comment</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>001</td>
+<td>Authentication failed</td>
+<td>Authentication details are incorrect.</td>
+</tr>
+<tr>
+<td>002</td>
+<td>Unknown username or password</td>
+<td>Authorization error, unknown user name or incorrect password.</td>
+</tr>
+<tr>
+<td>003</td>
+<td>Session ID expired</td>
+<td>The session ID has expired after a pre-set time of inactivity.</td>
+</tr>
+<tr>
+<td>005</td>
+<td>Missing session ID</td>
+<td>Missing session ID attribute in request.</td>
+</tr>
+<tr>
+<td>007</td>
+<td>IP Lockdown violation</td>
+<td>You have locked down the API instance to a specific IP address and then sent from an IP address different to the one you set.</td>
+</tr>
+<tr>
+<td>101</td>
+<td>Invalid or missing parameters</td>
+<td>One or more required parameters are missing or invalid</td>
+</tr>
+<tr>
+<td>102</td>
+<td>Invalid user data header</td>
+<td>The format of the user data header is incorrect.</td>
+</tr>
+<tr>
+<td>103</td>
+<td>Unknown API message ID</td>
+<td>The API message ID is unknown. Log in to your API account to check the ID or create a new one.</td>
+</tr>
+<tr>
+<td>104</td>
+<td>Unknown client message ID</td>
+<td>The client ID message that you are querying does not exist.</td>
+</tr>
+<tr>
+<td>105</td>
+<td>Invalid destination address</td>
+<td>The destination address you are attempting to send to is invalid.</td>
+</tr>
+<tr>
+<td>106</td>
+<td>Invalid source address</td>
+<td>The sender address that is specified is incorrect.</td>
+</tr>
+<tr>
+<td>107</td>
+<td>Empty message</td>
+<td>The message has no content</td>
+</tr>
+<tr>
+<td>108</td>
+<td>Invalid or missing API ID</td>
+<td>The API message ID is either incorrect or has not been included in the API call.</td>
+</tr>
+<tr>
+<td>109</td>
+<td>Missing message ID</td>
+<td>This can be either a client message ID or API message ID. For example when using the stop message command.</td>
+</tr>
+<tr>
+<td>113</td>
+<td>Maximum message parts exceeded</td>
+<td>The text message component of the message is greater than the permitted 160 characters (70 Unicode characters). Select concat equal to 1,2,3-N to overcome this by splitting the message across multiple messages.</td>
+</tr>
+<tr>
+<td>114</td>
+<td>Cannot route message</td>
+<td>This implies that the gateway is not currently routing messages to this network prefix. Please email <a href="mailto:support@clickatell.com">support@clickatell.com</a> with the mobile number in question.</td>
+</tr>
+<tr>
+<td>115</td>
+<td>Message expired</td>
+<td>Message has expired before we were able to deliver it to the upstream gateway. No charge applies</td>
+</tr>
+<tr>
+<td>116</td>
+<td>Invalid Unicode data</td>
+<td>The format of the unicode data entered is incorrect.</td>
+</tr>
+<tr>
+<td>120</td>
+<td>Invalid delivery time</td>
+<td>The format of the delivery time entered is incorrect.</td>
+</tr>
+<tr>
+<td>121</td>
+<td>Destination mobile number blocked</td>
+<td>This number is not allowed to receive messages from us and has been put on our block list.</td>
+</tr>
+<tr>
+<td>122</td>
+<td>Destination mobile opted out</td>
+<td>The user has opted out and is no longer subscribed to your service.</td>
+</tr>
+<tr>
+<td>123</td>
+<td>Invalid Sender ID</td>
+<td>A sender ID needs to be registered and approved before it can be successfully used in message sending.</td>
+</tr>
+<tr>
+<td>128</td>
+<td>Number delisted</td>
+<td>This error may be returned when a number has been delisted.</td>
+</tr>
+<tr>
+<td>130</td>
+<td>Maximum MT limit exceeded until </td>
+<td>This error is returned when an account has exceeded the maximum number of MT messages which can be sent daily or monthly. You can send messages again on the date indicated by the UNIX TIMESTAMP.</td>
+</tr>
+<tr>
+<td>201</td>
+<td>Invalid batch ID</td>
+<td>The batch ID which you have entered for batch messaging is not valid.</td>
+</tr>
+<tr>
+<td>202</td>
+<td>No batch template</td>
+<td>The batch template has not been defined for the batch command.</td>
+</tr>
+<tr>
+<td>301</td>
+<td>No credit left</td>
+<td>Insufficient credits</td>
+</tr>
+<tr>
+<td>901</td>
+<td>Internal error</td>
+<td>Please retry</td>
+</tr>
+</tbody>
+</table>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Clickatell HTTP API Overview maintained by <a href="https://github.com/arnoesterhuizen">arnoesterhuizen</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
