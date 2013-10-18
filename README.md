@@ -309,3 +309,22 @@ Error Code|Error Description|Comment
 202|No batch template|The batch template has not been defined for the batch command.
 301|No credit left|Insufficient credits
 901|Internal error|Please retry
+
+## HTTP Call-back
+Callback URLs will be used to send messages back to applications via a standard HTTP GET or POST. The reply-path URL is set by you within Central. The URL must begin with http://. HTTPS is accepted but only encryption is supported. Variables are passed back by the API on message response.
+
+The variables returned to the URL are:
+
+* Api_id (api_id=)
+* MO message ID (moMsgId)
+* Originating ISDN (from=)
+* Destination ISDN (to=)
+* Date and Time [MySQL format, GMT + 0200] (timestamp=)
+* DCS Character Coding (charset=) [when applicable]
+* Header Data [e.g. UDH etc.] (udh=) [when applicable]
+* Message Data (text=)
+
+## `Example call-back`
+If you provide this URL http://www.yourdomain.com/sms/sms.asp then we will do a POST or GET as follows:
+
+https://www.yourdomain.com/sms/sms.asp?api_id=12345&from=279991235642&to=27123456789&timestamp=2008-08-0609:43:50&text=Hereisthe%20messagetext&charset=ISO-8859-1&udh=&moMsgId=b2aee337abd962489b123fda9c3480fa
