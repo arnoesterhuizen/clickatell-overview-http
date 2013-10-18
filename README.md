@@ -328,3 +328,13 @@ The variables returned to the URL are:
 If you provide this URL http://www.yourdomain.com/sms/sms.asp then we will do a POST or GET as follows:
 
 https://www.yourdomain.com/sms/sms.asp?api_id=12345&from=279991235642&to=27123456789&timestamp=2008-08-0609:43:50&text=Hereisthe%20messagetext&charset=ISO-8859-1&udh=&moMsgId=b2aee337abd962489b123fda9c3480fa
+
+What happens when we are unable to connect to your server?
+Clickatell provides retries of MO callbacks. We follow retry as follows:
+1. 2 minutes after the original attempt
+2. 4 minutes after last retry
+3. 8 minutes after last retry
+4. 16 minutes after last retry
+5. 25 minutes after last retry (max retries reached)
+
+After this, we do not retry again.
