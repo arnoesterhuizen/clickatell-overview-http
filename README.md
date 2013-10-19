@@ -15,9 +15,9 @@ See a list of frequently used [commands](#commonly-used-commands) and [parameter
 The most frequently used commands are:
 * [`auth`](#auth) &ndash; Authenticate before you start sending messages
 * [`sendmsg`](#sendmsg) &ndash; Send a message
-* [`token_pay`](#token_pay) &ndash; Redeem a voucher for credits
 
 Other commonly used commands include:
+* [`token_pay`](#token_pay) &ndash; Redeem a voucher for credits
 * [`querymsg`](#querymsg) &ndash; Query the status of a message
 * [`getmsgcharge`](#getmsgcharge) &ndash; Get the charge and status of a message that was sent
 * [`ping`](#ping) &ndash; Prevent a session from expiring by extending it another 15 minutes
