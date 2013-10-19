@@ -1,14 +1,14 @@
 # Clickatell HTTP API Overview
 
-The full Clickatell HTTP API documentation can be found at https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf.
+The full Clickatell HTTP API documentation can be found at https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf, and the two-way documentation can be found at https://www.clickatell.com/downloads/Clickatell_two-way_technical_guide.pdf.
 
 You can access the API endpoint on `api.clickatell.com/http` using either `http` or `https` protocols, and use either `GET` or `POST` methods. Samples in this document use `GET` for easier reading, but Clickatell recommends using `POST` in production environments.
 
 Remember to URL encode your parameter values.
 
-# Overview
+# Overview: Sending Messages
 
-The call is in the format `https://api.clickatell.com/http/<command>?<parameters>`
+All API calls are in the format `https://api.clickatell.com/http/<command>?<parameters>`
 
 See a list of [commands](#commonly-used-commands) and [parameters](#parameters).
 
@@ -163,7 +163,7 @@ A unique ID we return that can be used to refer to a message submitted to our se
 
 ## `callback`
 
-Specify which message statuses to inform you of. You need to set a callback URL in the API settings in Clickatell Developer's Central.
+Specify which message statuses to inform you of. You need to set a callback URL in the API settings in Clickatell Developers' Central.
 
 We will pass [`apimsgid`](#apimsgid), [`charge`](#charge), [`climsgid`](#climsgid), [`from`](#from), [`status`](#status), [`timestamp`](#timestamp) and [`to`](#to). If we're unable to access the URL, our servers will retry up to 8 times.
 
@@ -174,15 +174,15 @@ Possible values for the `callback` parameter are:
 |0                |                                  |No callback triggered                 |
 |1                |003                               |Intermediate statuses                 |
 |2                |004, 005, 007, 009, 010, 012      |Final statuses                        |
-|3                |003, 004, 005, 006, 009, 010, 012 |Intermediate and final statuses       |
+|3                |003, 004, 005, 007, 009, 010, 012 |Intermediate and final statuses       |
 |4                |005, 007, 009, 010, 012           |Error statuses                        |
 |5                |003, 005, 007, 009, 010, 012      |Intermediate and error statuses       |
 |6                |004, 005, 007, 009, 010, 012      |Final and error statuses              |
-|7                |003, 004, 005, 006, 009, 010, 012 |Intermediate, final and error statuses|
+|7                |003, 004, 005, 007, 009, 010, 012 |Intermediate, final and error statuses|
 
 Currently all error statuses are also final statuses, but in the future we may return error statuses that are not final.
 
-The retry cycle:
+The retry cycle for status updates is:
 
 1. 2 minutes after first attempt
 1. 4 minutes after previous attempt
@@ -192,6 +192,8 @@ The retry cycle:
 1. 64 minutes after previous attempt
 1. 128 minutes after previous attempt
 1. 3 days after previous attempt
+
+After the last attempt we will not retry again, but you can still log in to Clickatell Developers' Central and get the message's latest status via our reporting tools.
 
 ## `charge`
 
@@ -277,6 +279,21 @@ Specify this parameter with a value of 1 if you have special characters in your 
 
 This is the username you used when signing up for your Clickatell Developers' Central account.
 
+# Overview: Receiving Messages
+
+Callback URLs will be used to hand received messages to your application. You need to configure this in Clickatell's Developers' Central under the "Receiving Messages" menu. 
+
+We will pass [`api_id`](#api_id), [`momsgid`](#momsgid), [`from`](#from), [`timestamp`](#timestamp), [`text`](#text) and [`to`](#to). If applicable, we will also pass [`charset`](#charset) and [`udh`](#udh) parameters. If we're unable to access the URL, our servers will retry up to 5 times.
+
+The retry cycle for incoming message callbacks is:
+1. 2 minutes after first attempt
+1. 4 minutes after previous attempt
+1. 8 minutes after previous attempt
+1. 16 minutes after previous attempt
+1. 25 minutes after previous attempt
+
+After the last attempt we will not retry again, but you can still log in to Clickatell Developers' Central and get the message details via our reporting tools.
+
 # Error Codes
 
 Error Code|Error Description|Comment
@@ -309,32 +326,3 @@ Error Code|Error Description|Comment
 202|No batch template|The batch template has not been defined for the batch command.
 301|No credit left|Insufficient credits
 901|Internal error|Please retry
-
-## HTTP Call-back
-Callback URLs will be used to send messages back to applications via a standard HTTP GET or POST. The reply-path URL is set by you within Central. The URL must begin with http://. HTTPS is accepted but only encryption is supported. Variables are passed back by the API on message response.
-
-The variables returned to the URL are:
-
-* Api_id (api_id=)
-* MO message ID (moMsgId)
-* Originating ISDN (from=)
-* Destination ISDN (to=)
-* Date and Time [MySQL format, GMT + 0200] (timestamp=)
-* DCS Character Coding (charset=) [when applicable]
-* Header Data [e.g. UDH etc.] (udh=) [when applicable]
-* Message Data (text=)
-
-## `Example call-back`
-If you provide this URL http://www.yourdomain.com/sms/sms.asp then we will do a POST or GET as follows:
-
-https://www.yourdomain.com/sms/sms.asp?api_id=12345&from=279991235642&to=27123456789&timestamp=2008-08-0609:43:50&text=Hereisthe%20messagetext&charset=ISO-8859-1&udh=&moMsgId=b2aee337abd962489b123fda9c3480fa
-
-What happens when we are unable to connect to your server?
-Clickatell provides retries of MO callbacks. We follow retry as follows:
-1. 2 minutes after the original attempt
-2. 4 minutes after last retry
-3. 8 minutes after last retry
-4. 16 minutes after last retry
-5. 25 minutes after last retry (max retries reached)
-
-After this, we do not retry again.
