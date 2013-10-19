@@ -1,16 +1,14 @@
 # Clickatell HTTP API Overview
 
-The full Clickatell HTTP API documentation can be found at https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf, and the two-way documentation can be found at https://www.clickatell.com/downloads/Clickatell_two-way_technical_guide.pdf.
-
-You can access the API endpoint on `api.clickatell.com/http` using either `http` or `https` protocols, and use either `GET` or `POST` methods. Samples in this document use `GET` for easier reading, but Clickatell recommends using `POST` in production environments.
-
-Remember to URL encode your parameter values.
+The full Clickatell HTTP API documentation for sending messages can be found at https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf, and the documentation for receiving messages can be found at https://www.clickatell.com/downloads/Clickatell_two-way_technical_guide.pdf.
 
 # Overview: Sending Messages
 
-All API calls are in the format `https://api.clickatell.com/http/<command>?<parameters>`
+You can access the API endpoint on `api.clickatell.com/http` using either `http` or `https` protocols, and use either `GET` or `POST` methods. Samples in this document use `GET` for easier reading, but Clickatell recommends using `POST` in production environments.
 
-See a list of [commands](#commonly-used-commands) and [parameters](#parameters).
+All API calls are in the format `https://api.clickatell.com/http/<command>?<parameters>`. 
+
+See a list of frequently used [commands](#commonly-used-commands) and [parameters](#parameters).
 
 # Commonly Used Commands
 
@@ -151,7 +149,8 @@ Use this command to redeem a voucher for message credits.
 See a list of [error codes and descriptions](#error-codes).
 
 # Parameters
-These (and more) parameters are documented in more detail in [Clickatell's HTTP API documentation](https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf).
+
+These (and more) parameters are documented in more detail in [Clickatell's HTTP API documentation](https://www.clickatell.com/downloads/http/Clickatell_HTTP.pdf). Remember to URL encode your parameter values.
 
 ## `api_id`
 
@@ -159,7 +158,7 @@ You can sign up for multiple APIs in your Clickatell Developers' Central account
 
 ## `apimsgid`
 
-A unique ID we return that can be used to refer to a message submitted to our servers. The `apimsgid` is a 32 character hexadecimal string.
+A unique ID we return that can be used to reference a message sent via our servers. The `apimsgid` is a 32 character hexadecimal string. See also [`momsgid`](#momsgid) for a received message.
 
 ## `callback`
 
@@ -221,6 +220,12 @@ Similar to the [`to`](#to) parameter, this needs to be in standard international
 
 To make sure that the [`from`](#from) parameter works as expected, set this parameter to 1 and we will only use mobile networks that allow a source address to be specified. This is only applicable if you you need recipients to be able to reply to your messages, and might mean we have to use more expensive delivery methods.
 
+MO is an abbreviation for "Mobile Originated", meaning a message that was sent from a handset to our servers.
+
+## `momsgid`
+
+Similar to an [`apimsgid`](#apimsgid), this is a unique ID we return that can be used to reference a message received via a two-way number. The `momsgid` is a 32 character hexadecimal string.
+
 ## `password`
 
 This is the password you used when signing up for your Clickatell Developers' Central account.
@@ -255,13 +260,13 @@ Status Code|Status Description|Comment
 
 ## `text`
 
-The body of the message you would like to send. If the text is more than 160 characters, use the [`concat`](#concat) parameter to make them concatenate on supported handsets. 
+The body of the message.
 
-For messages with special characters you will need to encode it using http://rishida.net/tools/conversion/, and set the [`unicode`](#unicode) parameter to 1.
+If you're sending messages and the text is more than 160 characters, use the [`concat`](#concat) parameter to make them concatenate on supported handsets. For messages with special characters you will need to encode it using http://rishida.net/tools/conversion/, and set the [`unicode`](#unicode) parameter to 1.
 
 ## `timestamp`
 
-The unix timestamp we return with every message status update to indicate when the status change was triggered.
+The unix timestamp we return with callbacks. With message status callbacks we use a unix timestamp, while with message receiving callbacks, we use a 'yyyy-mm-dd hh:mm:ss' format in the GMT+2 timezone.
 
 ## `to`
 
@@ -281,11 +286,14 @@ This is the username you used when signing up for your Clickatell Developers' Ce
 
 # Overview: Receiving Messages
 
-Callback URLs will be used to hand received messages to your application. You need to configure this in Clickatell's Developers' Central under the "Receiving Messages" menu. 
+Callback URLs will be used to hand received messages to your application. You need to configure this in Clickatell Developers' Central under the "Receiving Messages" menu. 
 
-We will pass [`api_id`](#api_id), [`momsgid`](#momsgid), [`from`](#from), [`timestamp`](#timestamp), [`text`](#text) and [`to`](#to). If applicable, we will also pass [`charset`](#charset) and [`udh`](#udh) parameters. If we're unable to access the URL, our servers will retry up to 5 times.
+We will pass [`api_id`](#api_id), [`momsgid`](#momsgid), [`from`](#from), [`timestamp`](#timestamp), [`text`](#text) and [`to`](#to).
+
+If we're unable to access the URL, our servers will retry up to 5 times.
 
 The retry cycle for incoming message callbacks is:
+
 1. 2 minutes after first attempt
 1. 4 minutes after previous attempt
 1. 8 minutes after previous attempt
